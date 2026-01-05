@@ -1,3 +1,5 @@
+//Run_this_file
+
 import http from 'k6/http';
 import { sleep, check } from 'k6';
 
@@ -6,16 +8,16 @@ import {
     searchCheapCars,
     searchCarsInRange,
     searchNonExistingCars
-} from './scenarios.js';
+} from './scenarios/search_permanent.js';
 
 import {
     nonEmptyRT,
     emptyRT,
     nonEmptyCount,
     emptyCount
-} from './metrics.js';
+} from './conf/metrics.js';
 
-import { thresholds } from './thresholds.js';
+import { thresholds } from './conf/thresholds.js';
 
 export const options = {
     vus: 40,

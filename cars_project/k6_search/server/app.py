@@ -81,3 +81,13 @@ def health():
         "status": "ok",
         "cars_loaded": len(CARS)
     }
+
+@app.get("/api/cars/{car_id}")
+def car_details(car_id: int):
+    #time.sleep(random.uniform(0.02, 0.3))
+
+    car = next((c for c in CARS if c["id"] == car_id), None)
+    if not car:
+        return {"error": "not found"}
+
+    return car
