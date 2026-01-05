@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: slo-guard
+  namespace: prod
+spec:
+  template:
+    spec:
+      serviceAccountName: chaos-controller
+      containers:
+        - name: slo-guard
+          image: bitnami/kubectl
+          command: ["/bin/sh", "/scripts/slo_guard.sh"]
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: scripts
+          configMap:
+            name: slo-guard-script
+      restartPolicy: Never

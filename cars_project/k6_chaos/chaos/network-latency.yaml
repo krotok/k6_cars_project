@@ -1,0 +1,16 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: search-network-delay
+  namespace: prod
+spec:
+  action: delay
+  mode: one
+  selector:
+    labelSelectors:
+      app: search-service
+  delay:
+    latency: "800ms"
+    jitter: "100ms"
+    correlation: "100"
+  duration: "10m"
