@@ -4,19 +4,25 @@ import { searchCarsInRange } from './scenarios/search_in_range.js';
 import { searchNonExistingCars } from './scenarios/search_non_existing.js';
 
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:8000';
+const TEST_DURATION = __ENV.TEST_DURATION || '5m';
+
+const TOTAL_VUS = Number(__ENV.TOTAL_VUS) || 50;
+
+const SEARCH_VUS = Math.floor(TOTAL_VUS * 0.6);
+const NON_EXISTING_VUS = Math.floor(TOTAL_VUS * 0.4);
 
 export const options = {
     scenarios: {
         range_search: {
             executor: 'constant-vus',
-            vus: 5,
-            duration: '1m',
+            vus: SEARCH_VUS,
+            duration: TEST_DURATION,
             exec: 'rangeSearch',
         },
         non_existing_search: {
             executor: 'constant-vus',
-            vus: 2,
-            duration: '1m',
+            vus: NON_EXISTING_VUS,
+            duration: TEST_DURATION,
             exec: 'nonExistingSearch',
         },
     },
