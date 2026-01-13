@@ -1,0 +1,1 @@
+k6 run -e TEST_DURATION=5m -e TOTAL_VUS=10 -o experimental-prometheus-rw  --out json=reports/load_resulrs.json ./main.js

@@ -1,10 +1,11 @@
 import http from 'k6/http';
 import { check } from 'k6';
+import { BASE_URL } from '../conf/config.js'
 import {
-    wrongRequestSearches,
+    // wrongRequestSearches,
     nonEmptySearches,
-    wrongRequestLatency,
-    searchLatencyNonEmpty
+    // wrongRequestLatency,
+    nonEmptySearchLatency
 } from '../conf/metrics.js';
 
 import { fetchCarDetails } from '../helpers/fetch_car_details.js';
@@ -16,7 +17,7 @@ export function searchCarsInRange(baseUrl) {
     const max = 60000;
 
     const res = http.get(
-        `${baseUrl}/search?price_gt=${min}&price_lt=${max}`
+        `${BASE_URL}/search?price_gt=${min}&price_lt=${max}`
     );
 
     const duration = res.timings.duration;
@@ -27,15 +28,14 @@ export function searchCarsInRange(baseUrl) {
 
     const cars = JSON.parse(res.body);
 
-    if (cars.length === 0) {
-        wrongRequestSearches.add(1);
-        wrongRequestLatency.add(duration);
-        return;
-    }
+    // if (cars.length === 0) {
+    //     wrongRequestSearches.add(1);
+    //     wrongRequestLatency.add(duration);
+    //     return;
+    // }
 
     nonEmptySearches.add(1);
-    searchLatencyNonEmpty.add(duration);
+    nonEmptySearchLatency.add(duration);
 
-    // 🔥 КЛЮЧЕВОЕ МЕСТО
-    fetchCarDetails(baseUrl, cars);
+    fetchCarDetails(cars);
 }
