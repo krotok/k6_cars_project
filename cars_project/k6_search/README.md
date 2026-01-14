@@ -35,3 +35,19 @@ kubectl apply -f k6-testrun.yaml
 
 # Run VictoriaMetrics  amd64-v1.133 without license
 victoria-metrics-windows-amd64-prod.exe
+
+# VictoriaMetrics
+kubectl apply -f victoria-metrics.yaml
+kubectl apply -f victoria-metrics-nodeport.yaml
+http://victoria-metrics.default.svc.cluster.local:8428
+http://localhost:30028/vmui
+# temporary forwarding
+kubectl port-forward svc/victoria-metrics 8428:8428 
+http://localhost:8428/vmui
+
+# Grafana
+kubectl apply -f grafana-datasource.yaml
+kubectl apply -f grafana-deployment.yaml
+kubectl apply -f grafana-service.yaml
+http://localhost:30030 admin:admin Admin123
+Import dashboard: 19665

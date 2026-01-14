@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k6-test-namespace
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: k6-quota
+  namespace: k6-test-namespace
+spec:
+  hard:
+    pods: "20"
+    requests.cpu: "4"
+    requests.memory: 8Gi
+    limits.cpu: "8"
+    limits.memory: 16Gi
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: k6-limits
+  namespace: k6-test-namespace
+spec:
+  limits:
+    - type: Container
+      defaultRequest:
+        cpu: "250m"
+        memory: "256Mi"
+      default:
+        cpu: "1000m"
+        memory: "1Gi"
+      max:
+        cpu: "2000m"
+        memory: "2Gi"
+---
+apiVersion: k6.io/v1alpha1
+kind: TestRun
+metadata:
+  name: cars-load-test
+  namespace: k6-test-namespace
+spec:
+  parallelism: 3
+    # For configMap test configuration 
+    # configMap:
+    #   name: k6-scripts
+    #   file: main.js
+
+  script:
+    localFile: /scripts/main.js
+
+  runner:
+    image: server_for_k6:1.0.2
+    imagePullPolicy: IfNotPresent
+    env:
+      - name: K6_PROMETHEUS_RW_SERVER_URL
+        value: http://victoria-metrics.default.svc.cluster.local:8428/api/v1/write
+
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+      limits:
+        cpu: "1500m"
+        memory: "1536Mi"
+
+  arguments: "--out experimental-prometheus-rw -e BASE_URL=http://cars-server.default.svc.cluster.local:8000 -e TOTAL_VUS=10 -e WARMUP_SEC=10s -e TEST_DURATION=1800s -e COOLDOWN_SEC=10s"

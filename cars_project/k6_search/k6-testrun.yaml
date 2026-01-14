@@ -17,11 +17,6 @@ spec:
   
 
   arguments: "-e BASE_URL=http://cars-server:8000 -e TOTAL_VUS=10 -e WARMUP_SEC=10 -e STEADY_SEC=60 -e COOLDOWN_SEC=10"
-  # arguments: >
-  #   -e BASE_URL=http://cars-server:8000
-  #   -e TOTAL_VUS=10
-  #   -e WARMUP_SEC=10
-  #   -e STEADY_SEC=300
-  #   -e COOLDOWN_SEC=10
+  
 
   
